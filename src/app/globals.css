@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 230 24% 12%;
+  --card: 0 0% 100%;
+  --card-foreground: 230 24% 12%;
+  --muted: 236 54% 97%;
+  --muted-foreground: 228 12% 42%;
+  --border: 236 42% 90%;
+  --input: 236 42% 90%;
+  --ring: 239 100% 69%;
+  --destructive: 0 74% 48%;
+  --destructive-foreground: 0 0% 100%;
+  --font-jost: "Jost";
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  min-height: 100vh;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-jost), Jost, Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::selection {
+  background: #c9beff;
+  color: #111827;
+}
+
+.focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}

@@ -1,0 +1,11 @@
+node_modules/
+.next/
+out/
+
+.env*
+.env.example
+!.env.example
+
+*.tsbuildinfo
+coraly-fit-home.png
+coraly-fit-layout-*.png
