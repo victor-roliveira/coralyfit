@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
 
   const payload = JSON.parse(rawBody) as AbacatePayCheckoutWebhook;
   const supabase = createSupabaseAdminClient();
+  let duplicateProcessed = false;
 
   if (payload.id) {
     const { error: eventError } = await supabase.from("webhook_events").insert({
@@ -49,10 +50,20 @@ export async function POST(request: NextRequest) {
     });
 
     if (eventError?.code === "23505") {
-      return NextResponse.json({ received: true, duplicate: true });
+      const { data: existingEvent } = await supabase
+        .from("webhook_events")
+        .select("processed_at")
+        .eq("id", payload.id)
+        .single();
+
+      if (existingEvent?.processed_at) {
+        return NextResponse.json({ received: true, duplicate: true });
+      }
+
+      duplicateProcessed = true;
     }
 
-    if (eventError) {
+    if (eventError && eventError.code !== "23505") {
       return NextResponse.json({ message: "Unable to register webhook event" }, { status: 500 });
     }
   }
@@ -85,5 +96,5 @@ export async function POST(request: NextRequest) {
       .eq("id", payload.id);
   }
 
-  return NextResponse.json({ received: true });
+  return NextResponse.json({ received: true, retried: duplicateProcessed });
 }
