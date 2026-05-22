@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 
 import { ProductCard } from "@/features/catalog/product-card";
 import type { CatalogProduct } from "@/features/catalog/types";
@@ -238,6 +238,91 @@ export function LookCarousel() {
   );
 }
 
+const testimonials = [
+  {
+    quote: "Maravilhosa, amei",
+    author: "Atayane T."
+  },
+  {
+    quote: "Boa qualidade",
+    author: "Nivanize R."
+  },
+  {
+    quote: "Experiencia maravilhosa.",
+    author: "Ana B."
+  },
+  {
+    quote: "Entrega perfeita, troca perfeita.",
+    author: "Katia F."
+  },
+  {
+    quote: "Voltarei a comprar.",
+    author: "Paula R."
+  }
+];
+
+export function TestimonialsCarousel() {
+  const [active, setActive] = useState(0);
+  const visibleItems = useMemo(() => {
+    return [0, 1, 2].map((offset) => testimonials[(active + offset) % testimonials.length]);
+  }, [active]);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActive((current) => (current + 1) % testimonials.length);
+    }, 6500);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="border-t py-14 text-center">
+      <div className="container">
+        <div className="flex items-center justify-between gap-4">
+          <span className="hidden w-20 md:block" />
+          <h2 className="text-2xl font-semibold text-slate-950">Depoimentos</h2>
+          <div className="flex gap-3">
+            <CarouselButton
+              direction="prev"
+              onClick={() =>
+                setActive((current) => (current - 1 + testimonials.length) % testimonials.length)
+              }
+            />
+            <CarouselButton
+              direction="next"
+              onClick={() => setActive((current) => (current + 1) % testimonials.length)}
+            />
+          </div>
+        </div>
+
+        <div className="mt-12 grid gap-8 md:grid-cols-3">
+          {visibleItems.map((item) => (
+            <div key={`${item.author}-${item.quote}`} className="space-y-4">
+              <div className="flex justify-center gap-0.5 text-[#ffb020]">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <Star key={index} className="h-5 w-5 fill-current" />
+                ))}
+              </div>
+              <p className="mx-auto max-w-xs text-lg font-bold leading-7 text-slate-950">
+                {item.quote}
+              </p>
+              <p className="text-sm text-slate-600">{item.author}</p>
+            </div>
+          ))}
+        </div>
+
+        <CarouselDots
+          total={testimonials.length}
+          active={active}
+          onSelect={setActive}
+          className="mx-auto mt-12 w-fit bg-transparent"
+          dotClassName="bg-slate-950"
+        />
+      </div>
+    </section>
+  );
+}
+
 function SectionHeader({
   title,
   action,
@@ -296,12 +381,14 @@ function CarouselDots({
   total,
   active,
   onSelect,
-  className
+  className,
+  dotClassName
 }: {
   total: number;
   active: number;
   onSelect: (index: number) => void;
   className?: string;
+  dotClassName?: string;
 }) {
   return (
     <div className={`flex items-center gap-2 rounded-full bg-white/45 px-4 py-2 backdrop-blur ${className ?? ""}`}>
@@ -311,7 +398,7 @@ function CarouselDots({
           type="button"
           aria-label={`Ir para slide ${index + 1}`}
           onClick={() => onSelect(index)}
-          className={`h-2 rounded-full bg-white transition-all ${
+          className={`h-2 rounded-full transition-all ${dotClassName ?? "bg-white"} ${
             index === active ? "w-7" : "w-2 opacity-80"
           }`}
         />

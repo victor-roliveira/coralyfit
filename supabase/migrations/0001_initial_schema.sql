@@ -397,9 +397,9 @@ select id, size, color, color_hex, sku, stock
 from public.products
 cross join (
   values
-    ('P', 'Lavanda', '#C9BEFF', 'P-LAV', 8),
-    ('M', 'Lavanda', '#C9BEFF', 'M-LAV', 12),
-    ('G', 'Azul Aura', '#8494FF', 'G-AUR', 7)
+    ('P', 'Lavanda', '#C9BEFF', 'LEG-AURA-P-LAV', 8),
+    ('M', 'Lavanda', '#C9BEFF', 'LEG-AURA-M-LAV', 12),
+    ('G', 'Azul Aura', '#8494FF', 'LEG-AURA-G-AUR', 7)
 ) as v(size, color, color_hex, sku, stock)
 where slug = 'legging-aura-high';
 
@@ -408,9 +408,9 @@ select id, size, color, color_hex, sku, stock
 from public.products
 cross join (
   values
-    ('P', 'Branco', '#FFFFFF', 'P-BRA', 10),
-    ('M', 'Coraly', '#6367FF', 'M-COR', 9),
-    ('G', 'Coraly', '#6367FF', 'G-COR', 5)
+    ('P', 'Branco', '#FFFFFF', 'TOP-FLOW-P-BRA', 10),
+    ('M', 'Coraly', '#6367FF', 'TOP-FLOW-M-COR', 9),
+    ('G', 'Coraly', '#6367FF', 'TOP-FLOW-G-COR', 5)
 ) as v(size, color, color_hex, sku, stock)
 where slug = 'top-flow-support';
 
@@ -419,8 +419,8 @@ select id, size, color, color_hex, sku, stock
 from public.products
 cross join (
   values
-    ('P', 'Lavanda', '#C9BEFF', 'P-LAV', 4),
-    ('M', 'Azul Aura', '#8494FF', 'M-AUR', 6),
-    ('G', 'Coraly', '#6367FF', 'G-COR', 3)
+    ('P', 'Lavanda', '#C9BEFF', 'SET-BLOOM-P-LAV', 4),
+    ('M', 'Azul Aura', '#8494FF', 'SET-BLOOM-M-AUR', 6),
+    ('G', 'Coraly', '#6367FF', 'SET-BLOOM-G-COR', 3)
 ) as v(size, color, color_hex, sku, stock)
 where slug = 'conjunto-bloom-move';

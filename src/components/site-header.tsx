@@ -83,14 +83,14 @@ export function SiteHeader() {
           className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center"
           aria-label="Coraly Fit"
         >
-          <span className="relative block h-12 w-48 overflow-hidden md:h-16 md:w-64">
+          <span className="relative block h-12 w-44 md:h-14 md:w-56">
             <Image
               src={logoCoraly}
               alt="Coraly Fit"
               fill
               priority
               sizes="(min-width: 768px) 256px, 192px"
-              className="object-cover object-center"
+              className="object-contain object-center"
             />
           </span>
         </Link>
