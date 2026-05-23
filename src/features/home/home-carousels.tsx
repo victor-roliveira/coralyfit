@@ -7,6 +7,11 @@ import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import heroImageOne from "@/assets/images/post-carrossel-1.png";
 import heroImageTwo from "@/assets/images/post-carrossel-2.png";
 import heroImageThree from "@/assets/images/post-carrossel-3.png";
+import categoryConjunto from "@/assets/images/icone-categoria-conjunto.png";
+import categoryLegging from "@/assets/images/icone-categoria-leging.png";
+import categoryMacacao from "@/assets/images/icone-categoria-macacao.png";
+import categoryShorts from "@/assets/images/icone-categoria-shorts.png";
+import categoryTop from "@/assets/images/icone-categoria-top.png";
 import { ProductCard } from "@/features/catalog/product-card";
 import type { CatalogProduct } from "@/features/catalog/types";
 
@@ -28,28 +33,23 @@ const heroSlides = [
 const categories = [
   {
     title: "Conjuntos",
-    image:
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80"
+    image: categoryConjunto
   },
   {
     title: "Leggings",
-    image:
-      "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=800&q=80"
+    image: categoryLegging
   },
   {
     title: "Tops",
-    image:
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80"
+    image: categoryTop
   },
   {
     title: "Shorts",
-    image:
-      "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=800&q=80"
+    image: categoryShorts
   },
   {
-    title: "Macacoes",
-    image:
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80"
+    title: "Macacões",
+    image: categoryMacacao
   }
 ];
 
@@ -96,38 +96,32 @@ export function HeroCarousel() {
 }
 
 export function CategoryCarousel() {
-  const ref = useRef<HTMLDivElement>(null);
-  const controls = useCarouselControls(ref);
-
   return (
     <section className="py-10 md:py-12">
-      <SectionHeader
-        title="Escolha por categoria"
-        canPrev={controls.canPrev}
-        canNext={controls.canNext}
-        onPrev={() => scrollRail(ref, -1, controls.update)}
-        onNext={() => scrollRail(ref, 1, controls.update)}
-      />
+      <div className="mb-7 px-4 md:container">
+        <h2 className="text-2xl font-black uppercase tracking-tight text-[#462C7D] md:text-3xl">
+          Escolha por categoria
+        </h2>
+      </div>
       <div
-        ref={ref}
-        onScroll={controls.update}
-        className="no-scrollbar grid auto-cols-[78vw] grid-flow-col gap-3 overflow-x-auto px-4 scroll-smooth sm:auto-cols-[42vw] md:auto-cols-[24vw]"
+        className="mx-auto grid max-w-6xl grid-cols-2 justify-items-center gap-x-6 gap-y-8 px-4 sm:grid-cols-3 lg:grid-cols-5"
       >
         {categories.map((category) => (
           <a
             key={category.title}
             href="#catalogo"
-            className="group relative h-[310px] overflow-hidden bg-slate-100"
+            className="group flex w-full max-w-[170px] flex-col items-center gap-3 bg-transparent text-center transition-transform duration-300 hover:-translate-y-1"
           >
-            <Image
-              src={category.image}
-              alt={category.title}
-              fill
-              sizes="(min-width: 768px) 25vw, 80vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/45 to-transparent" />
-            <span className="absolute bottom-6 left-6 rounded-full bg-white px-8 py-4 text-sm font-black uppercase text-slate-950 shadow-sm">
+            <div className="relative aspect-square w-full max-w-[150px] overflow-hidden">
+              <Image
+                src={category.image}
+                alt={category.title}
+                fill
+                sizes="(min-width: 768px) 150px, 44vw"
+                className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.06]"
+              />
+            </div>
+            <span className="text-sm font-black uppercase tracking-wide text-[#462C7D]">
               {category.title}
             </span>
           </a>

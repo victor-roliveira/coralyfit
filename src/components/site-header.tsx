@@ -54,7 +54,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b bg-white/90 backdrop-blur">
       <div className="hidden h-9 items-center justify-center border-b bg-slate-100 text-sm font-medium text-slate-700 md:flex">
-        Frete gratis acima de R$ 199 e compre em ate 10x sem juros
+        Frete grátis acima de R$ 199 e compre em até 5x sem juros
       </div>
       <div className="container relative flex min-h-20 items-center justify-between gap-4 py-2">
         <div className="flex items-center gap-4 lg:min-w-[390px]">
@@ -69,7 +69,7 @@ export function SiteHeader() {
           </Button>
           <nav className="hidden items-center gap-5 text-sm font-bold text-slate-800 lg:flex">
             <Link href="/#lancamentos" className="hover:text-primary">
-              Lancamentos
+              Lançamentos
             </Link>
             <Link href="/#mais-vendidos" className="hover:text-primary">
               Mais vendidos
