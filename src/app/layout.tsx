@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Jost } from "next/font/google";
 
+import { ScrollToTop } from "@/components/scroll-to-top";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { CartDrawer } from "@/features/cart/cart-drawer";
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={jost.variable}>
       <body>
+        <ScrollToTop />
         <SiteHeader />
         {children}
         <SiteFooter />

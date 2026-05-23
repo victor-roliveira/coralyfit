@@ -16,9 +16,14 @@ import { FavoriteButton } from "@/features/favorites/favorite-button";
 type ProductCardProps = {
   product: CatalogProduct;
   initialFavorited?: boolean;
+  onFavoriteChange?: (productId: string, favorited: boolean) => void;
 };
 
-export function ProductCard({ product, initialFavorited = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  initialFavorited = false,
+  onFavoriteChange
+}: ProductCardProps) {
   const availableVariants = product.variants.filter(
     (variant) => variant.stockQuantity - variant.reservedQuantity > 0
   );
@@ -55,6 +60,7 @@ export function ProductCard({ product, initialFavorited = false }: ProductCardPr
         <FavoriteButton
           productId={product.id}
           initialFavorited={initialFavorited}
+          onFavoriteChange={(favorited) => onFavoriteChange?.(product.id, favorited)}
           className="absolute right-3 top-3"
         />
         <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-white/92 px-2.5 py-1 text-xs font-bold text-slate-950">
@@ -112,7 +118,7 @@ export function ProductCard({ product, initialFavorited = false }: ProductCardPr
               aria-label={`Selecionar cor ${variant.color}`}
               className={cn(
                 "h-7 w-7 rounded-full border-2 border-white shadow-[0_0_0_1px_#cbd5e1] transition-transform hover:scale-105",
-                selectedVariant?.color === variant.color && "shadow-[0_0_0_2px_#6367FF]"
+                selectedVariant?.color === variant.color && "shadow-[0_0_0_2px_#B500B2]"
               )}
               style={{ backgroundColor: variant.colorHex ?? "#FFFFFF" }}
             />
@@ -133,7 +139,7 @@ export function ProductCard({ product, initialFavorited = false }: ProductCardPr
                     "flex min-h-10 items-center justify-center border px-2 text-center text-sm font-semibold transition-colors focus-ring disabled:cursor-not-allowed disabled:text-slate-300 disabled:line-through",
                     selected
                       ? "border-primary bg-[#f4f5ff] text-primary"
-                      : "bg-white hover:border-slate-950"
+                      : "bg-white hover:border-primary hover:text-primary"
                   )}
                 >
                   {variant.size}
@@ -142,7 +148,7 @@ export function ProductCard({ product, initialFavorited = false }: ProductCardPr
           })}
         </div>
         <Button
-          className="h-11 w-full rounded-full bg-primary text-white hover:bg-slate-950"
+          className="h-11 w-full rounded-full bg-[#B500B2] text-white hover:bg-[#8100D1]"
           disabled={!selectedVariant || availableQuantity <= 0}
           onClick={() => {
             if (!selectedVariant) return;

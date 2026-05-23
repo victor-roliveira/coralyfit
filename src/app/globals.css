@@ -11,7 +11,7 @@
   --muted-foreground: 228 12% 42%;
   --border: 236 42% 90%;
   --input: 236 42% 90%;
-  --ring: 239 100% 69%;
+  --ring: 301 100% 35%;
   --destructive: 0 74% 48%;
   --destructive-foreground: 0 0% 100%;
   --font-jost: "Jost";
@@ -47,7 +47,7 @@ html {
 }
 
 .focus-ring {
-  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B500B2] focus-visible:ring-offset-2;
 }
 
 @keyframes favorite-pop {

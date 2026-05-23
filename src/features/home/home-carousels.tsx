@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 
@@ -64,16 +64,9 @@ const categories = [
 
 export function HeroCarousel() {
   const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setActive((current) => (current + 1) % heroSlides.length);
-    }, 6000);
-
-    return () => window.clearInterval(interval);
-  }, []);
-
   const slide = heroSlides[active];
+  const isFirst = active === 0;
+  const isLast = active === heroSlides.length - 1;
 
   return (
     <section className="relative min-h-[520px] overflow-hidden border-b md:min-h-[650px]">
@@ -104,7 +97,7 @@ export function HeroCarousel() {
           </p>
           <a
             href="#catalogo"
-            className="mt-8 inline-flex h-12 min-w-56 items-center justify-center border border-slate-950 bg-white/45 px-8 text-sm font-bold text-slate-950 backdrop-blur transition-colors hover:bg-slate-950 hover:text-white"
+            className="mt-8 inline-flex h-12 min-w-56 items-center justify-center bg-[#B500B2] px-8 text-sm font-bold text-white transition-colors hover:bg-[#8100D1]"
           >
             Comprar agora
           </a>
@@ -118,15 +111,15 @@ export function HeroCarousel() {
       </div>
       <CarouselButton
         direction="prev"
+        disabled={isFirst}
         className="absolute left-6 top-1/2 hidden -translate-y-1/2 md:flex"
-        onClick={() =>
-          setActive((current) => (current - 1 + heroSlides.length) % heroSlides.length)
-        }
+        onClick={() => setActive((current) => Math.max(0, current - 1))}
       />
       <CarouselButton
         direction="next"
+        disabled={isLast}
         className="absolute right-6 top-1/2 hidden -translate-y-1/2 md:flex"
-        onClick={() => setActive((current) => (current + 1) % heroSlides.length)}
+        onClick={() => setActive((current) => Math.min(heroSlides.length - 1, current + 1))}
       />
     </section>
   );
@@ -134,16 +127,20 @@ export function HeroCarousel() {
 
 export function CategoryCarousel() {
   const ref = useRef<HTMLDivElement>(null);
+  const controls = useCarouselControls(ref);
 
   return (
     <section className="py-10 md:py-12">
       <SectionHeader
         title="Escolha por categoria"
-        onPrev={() => scrollRail(ref, -1)}
-        onNext={() => scrollRail(ref, 1)}
+        canPrev={controls.canPrev}
+        canNext={controls.canNext}
+        onPrev={() => scrollRail(ref, -1, controls.update)}
+        onNext={() => scrollRail(ref, 1, controls.update)}
       />
       <div
         ref={ref}
+        onScroll={controls.update}
         className="no-scrollbar grid auto-cols-[78vw] grid-flow-col gap-3 overflow-x-auto px-4 scroll-smooth sm:auto-cols-[42vw] md:auto-cols-[24vw]"
       >
         {categories.map((category) => (
@@ -186,17 +183,21 @@ export function ProductCarousel({
     const ordered = reverse ? [...products].reverse() : products;
     return ordered.concat(ordered).slice(0, 8);
   }, [products, reverse]);
+  const controls = useCarouselControls(ref, [displayProducts.length]);
 
   return (
     <section id={id} className="py-10 md:py-12">
       <SectionHeader
         title={title}
         action="Ver mais"
-        onPrev={() => scrollRail(ref, -1)}
-        onNext={() => scrollRail(ref, 1)}
+        canPrev={controls.canPrev}
+        canNext={controls.canNext}
+        onPrev={() => scrollRail(ref, -1, controls.update)}
+        onNext={() => scrollRail(ref, 1, controls.update)}
       />
       <div
         ref={ref}
+        onScroll={controls.update}
         className="no-scrollbar grid auto-cols-[82vw] grid-flow-col gap-3 overflow-x-auto px-4 scroll-smooth sm:auto-cols-[42vw] lg:auto-cols-[20vw]"
       >
         {displayProducts.map((product, index) => (
@@ -209,17 +210,21 @@ export function ProductCarousel({
 
 export function LookCarousel() {
   const ref = useRef<HTMLDivElement>(null);
+  const controls = useCarouselControls(ref);
 
   return (
     <section className="py-10 md:py-12">
       <SectionHeader
         title="Compre o look"
         action="Ver mais"
-        onPrev={() => scrollRail(ref, -1)}
-        onNext={() => scrollRail(ref, 1)}
+        canPrev={controls.canPrev}
+        canNext={controls.canNext}
+        onPrev={() => scrollRail(ref, -1, controls.update)}
+        onNext={() => scrollRail(ref, 1, controls.update)}
       />
       <div
         ref={ref}
+        onScroll={controls.update}
         className="no-scrollbar grid auto-cols-[84vw] grid-flow-col gap-3 overflow-x-auto px-4 scroll-smooth md:auto-cols-[32vw] lg:auto-cols-[20vw]"
       >
         {[1, 2, 3, 4, 5, 6].map((item) => (
@@ -263,34 +268,27 @@ const testimonials = [
 
 export function TestimonialsCarousel() {
   const [active, setActive] = useState(0);
+  const maxActive = Math.max(0, testimonials.length - 3);
   const visibleItems = useMemo(() => {
-    return [0, 1, 2].map((offset) => testimonials[(active + offset) % testimonials.length]);
+    return testimonials.slice(active, active + 3);
   }, [active]);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setActive((current) => (current + 1) % testimonials.length);
-    }, 6500);
-
-    return () => window.clearInterval(interval);
-  }, []);
 
   return (
     <section className="border-t py-14 text-center">
       <div className="container">
         <div className="flex items-center justify-between gap-4">
           <span className="hidden w-20 md:block" />
-          <h2 className="text-2xl font-semibold text-slate-950">Depoimentos</h2>
+          <h2 className="text-2xl font-semibold text-[#462C7D]">Depoimentos</h2>
           <div className="flex gap-3">
             <CarouselButton
               direction="prev"
-              onClick={() =>
-                setActive((current) => (current - 1 + testimonials.length) % testimonials.length)
-              }
+              disabled={active === 0}
+              onClick={() => setActive((current) => Math.max(0, current - 1))}
             />
             <CarouselButton
               direction="next"
-              onClick={() => setActive((current) => (current + 1) % testimonials.length)}
+              disabled={active === maxActive}
+              onClick={() => setActive((current) => Math.min(maxActive, current + 1))}
             />
           </div>
         </div>
@@ -312,11 +310,11 @@ export function TestimonialsCarousel() {
         </div>
 
         <CarouselDots
-          total={testimonials.length}
+          total={maxActive + 1}
           active={active}
-          onSelect={setActive}
+          onSelect={(index) => setActive(Math.min(index, maxActive))}
           className="mx-auto mt-12 w-fit bg-transparent"
-          dotClassName="bg-slate-950"
+          dotClassName="bg-[#B500B2]"
         />
       </div>
     </section>
@@ -326,27 +324,34 @@ export function TestimonialsCarousel() {
 function SectionHeader({
   title,
   action,
+  canPrev,
+  canNext,
   onPrev,
   onNext
 }: {
   title: string;
   action?: string;
+  canPrev: boolean;
+  canNext: boolean;
   onPrev: () => void;
   onNext: () => void;
 }) {
   return (
     <div className="mb-7 flex items-center justify-between gap-4 px-4 md:container">
-      <h2 className="text-2xl font-black uppercase tracking-tight text-slate-950 md:text-3xl">
+      <h2 className="text-2xl font-black uppercase tracking-tight text-[#462C7D] md:text-3xl">
         {title}
       </h2>
       <div className="flex items-center gap-3">
         {action ? (
-          <a href="#catalogo" className="hidden text-sm font-bold underline underline-offset-4 md:block">
+          <a
+            href="#catalogo"
+            className="hidden text-sm font-bold underline underline-offset-4 transition-colors hover:text-[#B500B2] md:block"
+          >
             {action}
           </a>
         ) : null}
-        <CarouselButton direction="prev" onClick={onPrev} />
-        <CarouselButton direction="next" onClick={onNext} />
+        <CarouselButton direction="prev" disabled={!canPrev} onClick={onPrev} />
+        <CarouselButton direction="next" disabled={!canNext} onClick={onNext} />
       </div>
     </div>
   );
@@ -355,11 +360,13 @@ function SectionHeader({
 function CarouselButton({
   direction,
   onClick,
-  className
+  className,
+  disabled = false
 }: {
   direction: "prev" | "next";
   onClick: () => void;
   className?: string;
+  disabled?: boolean;
 }) {
   const Icon = direction === "prev" ? ChevronLeft : ChevronRight;
 
@@ -367,9 +374,12 @@ function CarouselButton({
     <button
       type="button"
       aria-label={direction === "prev" ? "Anterior" : "Proximo"}
+      disabled={disabled}
       onClick={onClick}
-      className={`flex h-10 w-10 items-center justify-center rounded-full ${
-        direction === "prev" ? "bg-slate-100 text-slate-500" : "bg-slate-950 text-white"
+      className={`flex h-10 w-10 items-center justify-center rounded-full border transition-colors ${
+        disabled
+          ? "cursor-not-allowed border-slate-200 bg-white text-slate-400"
+          : "border-[#B500B2] bg-[#B500B2] text-white hover:bg-[#8100D1]"
       } ${className ?? ""}`}
     >
       <Icon className="h-5 w-5" />
@@ -407,7 +417,11 @@ function CarouselDots({
   );
 }
 
-function scrollRail(ref: React.RefObject<HTMLDivElement | null>, direction: -1 | 1) {
+function scrollRail(
+  ref: React.RefObject<HTMLDivElement | null>,
+  direction: -1 | 1,
+  onAfterScroll?: () => void
+) {
   const element = ref.current;
   if (!element) return;
 
@@ -415,4 +429,31 @@ function scrollRail(ref: React.RefObject<HTMLDivElement | null>, direction: -1 |
     left: direction * Math.max(280, element.clientWidth * 0.82),
     behavior: "smooth"
   });
+  window.setTimeout(() => onAfterScroll?.(), 360);
+}
+
+function useCarouselControls(
+  ref: React.RefObject<HTMLDivElement | null>,
+  deps: React.DependencyList = []
+) {
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const update = useCallback(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    setCanPrev(element.scrollLeft > 2);
+    setCanNext(element.scrollLeft + element.clientWidth < element.scrollWidth - 2);
+  }, [ref]);
+
+  useEffect(() => {
+    update();
+    window.addEventListener("resize", update);
+
+    return () => window.removeEventListener("resize", update);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [update, ...deps]);
+
+  return { canPrev, canNext, update };
 }

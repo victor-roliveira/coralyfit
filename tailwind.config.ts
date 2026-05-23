@@ -25,7 +25,7 @@ const config: Config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#6367FF",
+          DEFAULT: "#B500B2",
           foreground: "#FFFFFF"
         },
         secondary: {
@@ -58,7 +58,7 @@ const config: Config = {
         sm: "calc(0.5rem - 4px)"
       },
       boxShadow: {
-        soft: "0 18px 50px rgba(99, 103, 255, 0.14)"
+        soft: "0 18px 50px rgba(181, 0, 178, 0.14)"
       }
     }
   },

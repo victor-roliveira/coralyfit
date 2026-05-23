@@ -39,7 +39,13 @@ export function CartDrawer() {
             <ShoppingBag className="h-5 w-5 text-primary" />
             Carrinho
           </div>
-          <Button variant="ghost" size="icon" onClick={closeCart} aria-label="Fechar carrinho">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={closeCart}
+            aria-label="Fechar carrinho"
+            className="bg-transparent text-[#B500B2] shadow-none hover:bg-transparent hover:text-[#8100D1]"
+          >
             <X className="h-5 w-5" />
           </Button>
         </div>
@@ -85,6 +91,7 @@ export function CartDrawer() {
                         size="icon"
                         onClick={() => removeItem(item.variantId)}
                         aria-label="Remover item"
+                        className="bg-transparent text-[#B500B2] shadow-none hover:bg-transparent hover:text-[#8100D1]"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -94,7 +101,7 @@ export function CartDrawer() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8"
+                          className="h-8 w-8 bg-transparent text-[#B500B2] shadow-none hover:bg-transparent hover:text-[#8100D1]"
                           onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
                           aria-label="Diminuir quantidade"
                         >
@@ -106,7 +113,7 @@ export function CartDrawer() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8"
+                          className="h-8 w-8 bg-transparent text-[#B500B2] shadow-none hover:bg-transparent hover:text-[#8100D1]"
                           onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
                           aria-label="Aumentar quantidade"
                         >

@@ -5,17 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const helpLinks = [
-  "FAQ",
-  "Troca e devolucao",
-  "Como comprar?",
   "Rastrear pedido",
   "Fale conosco"
 ];
 
 const pageLinks = [
-  "Sobre nos",
-  "Sustentabilidade",
-  "Politica de privacidade",
+  "Sobre nós",
+  "Política de privacidade",
   "Termos e condicoes"
 ];
 
@@ -44,9 +40,7 @@ export function SiteFooter() {
           <p className="mt-6 max-w-xs text-sm leading-6 text-slate-600">
             Coraly Fit Comercio de Roupas e Acessorios LTDA
             <br />
-            CNPJ: 00.000.000/0001-00
-            <br />
-            Brasil
+            Salvador, Bahia, Brasil
           </p>
         </div>
         <div>
@@ -56,7 +50,7 @@ export function SiteFooter() {
           <div className="mt-5 space-y-3">
             <Input placeholder="Nome" className="h-12 rounded-none border-0 bg-slate-100" />
             <Input placeholder="E-mail" className="h-12 rounded-none border-0 bg-slate-100" />
-            <Button className="h-12 w-full rounded-full bg-slate-950 text-white hover:bg-primary">
+            <Button className="h-12 w-full rounded-full bg-[#B500B2] text-white hover:bg-[#8100D1]">
               Enviar
             </Button>
           </div>

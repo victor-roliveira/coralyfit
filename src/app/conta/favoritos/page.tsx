@@ -5,8 +5,8 @@ import { AccountNav } from "@/components/account-nav";
 import { Button } from "@/components/ui/button";
 import { hasSupabaseEnv } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { ProductCard } from "@/features/catalog/product-card";
 import type { CatalogProduct } from "@/features/catalog/types";
+import { FavoritesGrid } from "@/features/favorites/favorites-grid";
 
 type FavoriteWithProduct = {
   products: {
@@ -86,11 +86,7 @@ export default async function FavoritesPage() {
           Favoritos
         </h1>
       </div>
-      <div className="grid gap-x-3 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} initialFavorited />
-        ))}
-      </div>
+      <FavoritesGrid products={products} />
     </main>
   );
 }

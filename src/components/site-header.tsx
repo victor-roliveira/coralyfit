@@ -56,13 +56,14 @@ export function SiteHeader() {
       <div className="hidden h-9 items-center justify-center border-b bg-slate-100 text-sm font-medium text-slate-700 md:flex">
         Frete gratis acima de R$ 199 e compre em ate 10x sem juros
       </div>
-      <div className="container relative flex min-h-16 items-center justify-between gap-4 py-2">
+      <div className="container relative flex min-h-20 items-center justify-between gap-4 py-2">
         <div className="flex items-center gap-4 lg:min-w-[390px]">
           <Button
             variant="ghost"
             size="icon"
             aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
             onClick={() => setMenuOpen((value) => !value)}
+            className="bg-transparent text-[#B500B2] shadow-none hover:bg-transparent hover:text-[#8100D1]"
           >
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-7 w-7" />}
           </Button>
@@ -83,14 +84,14 @@ export function SiteHeader() {
           className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center"
           aria-label="Coraly Fit"
         >
-          <span className="relative block h-12 w-44 md:h-14 md:w-56">
+          <span className="relative block h-14 w-52 md:h-20 md:w-72">
             <Image
               src={logoCoraly}
               alt="Coraly Fit"
               fill
               priority
-              sizes="(min-width: 768px) 256px, 192px"
-              className="object-contain object-center"
+              sizes="(min-width: 768px) 288px, 208px"
+              className="object-cover object-center"
             />
           </span>
         </Link>
@@ -103,7 +104,7 @@ export function SiteHeader() {
               onFocus={() => setSearchFocused(true)}
               onBlur={() => window.setTimeout(() => setSearchFocused(false), 140)}
               placeholder="O que voce procura?"
-              className="h-12 rounded-none border-0 bg-slate-100 pl-5 pr-11"
+              className="h-12 rounded-none border border-transparent bg-slate-100 pl-5 pr-11"
             />
             <Image
               src={searchIcon}
@@ -117,7 +118,7 @@ export function SiteHeader() {
                     <Link
                       key={product.id}
                       href={`/produtos/${product.slug}`}
-                      className="flex items-center justify-between gap-3 px-3 py-2 text-sm hover:bg-slate-50"
+                      className="flex items-center justify-between gap-3 px-3 py-2 text-sm hover:bg-[#B500B2]/10 hover:text-[#B500B2]"
                     >
                       <span className="font-semibold text-slate-950">{product.name}</span>
                       <span className="text-xs uppercase text-slate-400">{product.category}</span>
@@ -131,7 +132,13 @@ export function SiteHeader() {
               </div>
             ) : null}
           </label>
-          <Button asChild variant="ghost" size="icon" aria-label="Minha conta">
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            aria-label="Minha conta"
+            className="bg-transparent shadow-none hover:bg-transparent"
+          >
             <Link href="/conta/perfil">
               <Image src={userIcon} alt="" className="h-6 w-6" />
             </Link>
@@ -142,11 +149,11 @@ export function SiteHeader() {
             size="icon"
             aria-label="Abrir carrinho"
             onClick={openCart}
-            className="relative"
+            className="relative bg-transparent shadow-none hover:bg-transparent"
           >
             <Image src={cartIcon} alt="" className="h-6 w-6" />
             {itemsCount > 0 ? (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-bold text-white">
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#8100D1] px-1 text-[11px] font-bold text-white">
                 {itemsCount}
               </span>
             ) : null}
@@ -154,7 +161,7 @@ export function SiteHeader() {
         </div>
       </div>
       {menuOpen ? (
-        <div className="absolute inset-x-0 top-full z-50 border-t bg-[#4A3A63] text-white shadow-2xl">
+        <div className="absolute inset-x-0 top-full z-50 max-h-[calc(100dvh-5rem)] overflow-y-auto border-t bg-[#B500B2] text-white shadow-2xl md:max-h-[calc(100dvh-7.25rem)]">
           <div className="container grid gap-10 py-12 md:grid-cols-4">
             {menuGroups.map((group) => (
               <div key={group.title}>

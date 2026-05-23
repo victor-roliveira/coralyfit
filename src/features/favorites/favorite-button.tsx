@@ -11,12 +11,14 @@ type FavoriteButtonProps = {
   productId: string;
   initialFavorited?: boolean;
   className?: string;
+  onFavoriteChange?: (favorited: boolean) => void;
 };
 
 export function FavoriteButton({
   productId,
   initialFavorited = false,
-  className
+  className,
+  onFavoriteChange
 }: FavoriteButtonProps) {
   const router = useRouter();
   const [favorited, setFavorited] = useState(initialFavorited);
@@ -42,6 +44,7 @@ export function FavoriteButton({
 
       const payload = (await response.json()) as { favorited: boolean };
       setFavorited(payload.favorited);
+      onFavoriteChange?.(payload.favorited);
       setBurst(payload.favorited);
       window.setTimeout(() => setBurst(false), 650);
     });

@@ -96,7 +96,7 @@ export function ProductDetail({ product }: { product: CatalogProduct }) {
                   aria-label={`Selecionar cor ${variant.color}`}
                   className={cn(
                     "h-11 w-11 rounded-full border-4 border-white shadow-[0_0_0_1px_#cbd5e1]",
-                    selectedVariant?.color === variant.color && "shadow-[0_0_0_2px_#6367FF]"
+                    selectedVariant?.color === variant.color && "shadow-[0_0_0_2px_#B500B2]"
                   )}
                   style={{ backgroundColor: variant.colorHex ?? "#FFFFFF" }}
                 />
@@ -119,7 +119,7 @@ export function ProductDetail({ product }: { product: CatalogProduct }) {
                       "h-12 border text-sm font-semibold transition-colors disabled:text-slate-300 disabled:line-through",
                       selectedVariantId === variant.id
                         ? "border-primary bg-[#f4f5ff] text-primary"
-                        : "hover:border-slate-950"
+                        : "hover:border-primary hover:text-primary"
                     )}
                   >
                     {variant.size}
@@ -142,7 +142,7 @@ export function ProductDetail({ product }: { product: CatalogProduct }) {
 
           <Button
             size="lg"
-            className="mt-8 h-14 w-full rounded-full bg-primary text-base font-black uppercase hover:bg-slate-950"
+            className="mt-8 h-14 w-full rounded-full bg-[#B500B2] text-base font-black uppercase hover:bg-[#8100D1]"
             disabled={!selectedVariant || availableQuantity <= 0}
             onClick={() => {
               if (!selectedVariant) return;
