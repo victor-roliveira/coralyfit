@@ -5,6 +5,7 @@ import { AccountNav } from "@/components/account-nav";
 import { Button } from "@/components/ui/button";
 import { hasSupabaseEnv } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { calculateDiscountedPrice } from "@/features/catalog/pricing";
 import type { CatalogProduct } from "@/features/catalog/types";
 import { FavoritesGrid } from "@/features/favorites/favorites-grid";
 
@@ -15,6 +16,8 @@ type FavoriteWithProduct = {
     slug: string;
     description: string;
     price_cents: number;
+    discount_percent: number;
+    is_launch: boolean;
     images: string[];
     categories: { name: string } | null;
     product_variants: Array<{
@@ -45,7 +48,7 @@ export default async function FavoritesPage() {
   const { data } = await supabase
     .from("favorites")
     .select(
-      "products(id,name,slug,description,price_cents,images,categories(name),product_variants(id,size,color,color_hex,stock_quantity,reserved_quantity))"
+      "products(id,name,slug,description,price_cents,discount_percent,is_launch,images,categories(name),product_variants(id,size,color,color_hex,stock_quantity,reserved_quantity))"
     )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
@@ -58,7 +61,13 @@ export default async function FavoritesPage() {
       name: product!.name,
       slug: product!.slug,
       description: product!.description,
-      priceCents: product!.price_cents,
+      priceCents: calculateDiscountedPrice(
+        product!.price_cents,
+        product!.discount_percent ?? 0
+      ),
+      originalPriceCents: product!.price_cents,
+      discountPercent: product!.discount_percent ?? 0,
+      isLaunch: product!.is_launch ?? false,
       images: product!.images,
       category: product!.categories?.name ?? "Sem categoria",
       variants: product!.product_variants.map((variant) => ({

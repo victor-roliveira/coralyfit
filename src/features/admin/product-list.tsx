@@ -60,9 +60,21 @@ export function ProductList({ products }: ProductListProps) {
                     <div className="min-w-0">
                       <p className="truncate font-bold text-[#462C7D]">{product.name}</p>
                       <p className="truncate text-xs text-slate-500">{product.slug}</p>
-                      <p className="mt-1 text-xs font-semibold text-slate-700">
-                        {formatCurrency(product.priceCents)}
-                      </p>
+                      <div className="mt-1 flex flex-wrap items-baseline gap-2">
+                        <p className="text-xs font-semibold text-slate-700">
+                          {formatCurrency(product.priceCents)}
+                        </p>
+                        {product.discountPercent > 0 ? (
+                          <p className="text-[11px] italic text-slate-400 line-through">
+                            {formatCurrency(product.originalPriceCents)}
+                          </p>
+                        ) : null}
+                      </div>
+                      {product.isLaunch ? (
+                        <p className="mt-1 w-fit rounded-full bg-[#C9BEFF]/45 px-2 py-0.5 text-[11px] font-bold uppercase text-[#462C7D]">
+                          Lançamento
+                        </p>
+                      ) : null}
                     </div>
                   </div>
                   <span className="hidden text-slate-600 lg:block">{product.category}</span>

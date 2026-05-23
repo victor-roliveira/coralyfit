@@ -220,6 +220,8 @@ export type ProductRow = {
   images: string[];
   active: boolean;
   abacatepay_product_id: string | null;
+  is_launch: boolean;
+  discount_percent: number;
   created_at: string;
   updated_at: string;
 };

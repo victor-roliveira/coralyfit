@@ -22,8 +22,10 @@ const productSchema = z.object({
   description: z.string().trim().min(12, "Descreva melhor o produto."),
   categoryId: z.string().trim().uuid("Selecione uma categoria."),
   price: z.string().trim().min(1, "Informe o preco."),
+  discountPercent: z.string().trim().optional(),
   variantsJson: z.string().trim().min(1, "Informe pelo menos uma variacao."),
   active: z.string().optional(),
+  isLaunch: z.string().optional(),
   abacatepayProductId: z.string().trim().optional()
 });
 
@@ -55,6 +57,11 @@ export async function createProduct(
     return { message: "Informe um preco valido." };
   }
 
+  const discountPercent = parseDiscountPercent(parsed.data.discountPercent ?? "");
+  if (discountPercent === null) {
+    return { message: "Informe um desconto entre 0 e 100%." };
+  }
+
   const variants = parseVariants(parsed.data.variantsJson);
   if (!variants.ok) {
     return { message: variants.message };
@@ -78,6 +85,8 @@ export async function createProduct(
       description: parsed.data.description,
       category_id: parsed.data.categoryId,
       price_cents: priceCents,
+      discount_percent: discountPercent,
+      is_launch: parsed.data.isLaunch === "on",
       images: uploadedImages.urls,
       active: parsed.data.active === "on",
       abacatepay_product_id: parsed.data.abacatepayProductId || null
@@ -146,6 +155,16 @@ function parsePriceToCents(value: string) {
   if (!Number.isFinite(number)) return null;
 
   return Math.round(number * 100);
+}
+
+function parseDiscountPercent(value: string) {
+  if (!value.trim()) return 0;
+
+  const normalized = value.replace(",", ".");
+  const number = Number(normalized);
+  if (!Number.isFinite(number) || number < 0 || number > 100) return null;
+
+  return Math.round(number);
 }
 
 function parseVariants(value: string):

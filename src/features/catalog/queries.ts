@@ -1,6 +1,7 @@
 import { hasSupabaseEnv } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { mockProducts } from "@/features/catalog/mock-products";
+import { calculateDiscountedPrice } from "@/features/catalog/pricing";
 import type { CatalogProduct } from "@/features/catalog/types";
 
 type ProductWithRelations = {
@@ -9,6 +10,8 @@ type ProductWithRelations = {
   slug: string;
   description: string;
   price_cents: number;
+  is_launch: boolean;
+  discount_percent: number;
   images: string[];
   categories: { name: string } | null;
   product_variants: Array<{
@@ -30,7 +33,7 @@ export async function listCatalogProducts(): Promise<CatalogProduct[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,name,slug,description,price_cents,images,categories(name),product_variants(id,size,color,color_hex,stock_quantity,reserved_quantity)"
+      "id,name,slug,description,price_cents,is_launch,discount_percent,images,categories(name),product_variants(id,size,color,color_hex,stock_quantity,reserved_quantity)"
     )
     .eq("active", true)
     .order("created_at", { ascending: false });
@@ -39,23 +42,7 @@ export async function listCatalogProducts(): Promise<CatalogProduct[]> {
     return mockProducts;
   }
 
-  return (data as unknown as ProductWithRelations[]).map((product) => ({
-    id: product.id,
-    name: product.name,
-    slug: product.slug,
-    description: product.description,
-    priceCents: product.price_cents,
-    category: product.categories?.name ?? "Sem categoria",
-    images: product.images,
-    variants: product.product_variants.map((variant) => ({
-      id: variant.id,
-      size: variant.size,
-      color: variant.color,
-      colorHex: variant.color_hex,
-      stockQuantity: variant.stock_quantity,
-      reservedQuantity: variant.reserved_quantity
-    }))
-  }));
+  return (data as unknown as ProductWithRelations[]).map(mapCatalogProduct);
 }
 
 export async function getCatalogProductBySlug(slug: string): Promise<CatalogProduct | null> {
@@ -67,7 +54,7 @@ export async function getCatalogProductBySlug(slug: string): Promise<CatalogProd
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,name,slug,description,price_cents,images,categories(name),product_variants(id,size,color,color_hex,stock_quantity,reserved_quantity)"
+      "id,name,slug,description,price_cents,is_launch,discount_percent,images,categories(name),product_variants(id,size,color,color_hex,stock_quantity,reserved_quantity)"
     )
     .eq("active", true)
     .eq("slug", slug)
@@ -79,12 +66,21 @@ export async function getCatalogProductBySlug(slug: string): Promise<CatalogProd
 
   const product = data as unknown as ProductWithRelations;
 
+  return mapCatalogProduct(product);
+}
+
+function mapCatalogProduct(product: ProductWithRelations): CatalogProduct {
+  const discountPercent = product.discount_percent ?? 0;
+
   return {
     id: product.id,
     name: product.name,
     slug: product.slug,
     description: product.description,
-    priceCents: product.price_cents,
+    priceCents: calculateDiscountedPrice(product.price_cents, discountPercent),
+    originalPriceCents: product.price_cents,
+    discountPercent,
+    isLaunch: product.is_launch ?? false,
     category: product.categories?.name ?? "Sem categoria",
     images: product.images,
     variants: product.product_variants.map((variant) => ({

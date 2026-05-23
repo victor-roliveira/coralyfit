@@ -4,33 +4,24 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 
+import heroImageOne from "@/assets/images/post-carrossel-1.png";
+import heroImageTwo from "@/assets/images/post-carrossel-2.png";
+import heroImageThree from "@/assets/images/post-carrossel-3.png";
 import { ProductCard } from "@/features/catalog/product-card";
 import type { CatalogProduct } from "@/features/catalog/types";
 
 const heroSlides = [
   {
-    eyebrow: "Drop Aura",
-    title: "Coraly Fit",
-    description:
-      "O basico de treino com cor, conforto e modelagem para acompanhar sua rotina.",
-    image:
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1800&q=85"
+    title: "Coraly Fit lancamento",
+    image: heroImageOne
   },
   {
-    eyebrow: "Lancamentos",
-    title: "Treino leve",
-    description:
-      "Tops, leggings e conjuntos em tons suaves para treinar e viver o dia com liberdade.",
-    image:
-      "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=1800&q=85"
+    title: "Coraly Fit treino",
+    image: heroImageTwo
   },
   {
-    eyebrow: "Mais vendidos",
-    title: "Move com voce",
-    description:
-      "Pecas com toque macio, sustentacao equilibrada e estoque por tamanho e cor.",
-    image:
-      "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1800&q=85"
+    title: "Coraly Fit performance",
+    image: heroImageThree
   }
 ];
 
@@ -64,51 +55,30 @@ const categories = [
 
 export function HeroCarousel() {
   const [active, setActive] = useState(0);
-  const slide = heroSlides[active];
   const isFirst = active === 0;
   const isLast = active === heroSlides.length - 1;
 
   return (
-    <section className="relative min-h-[520px] overflow-hidden border-b md:min-h-[650px]">
+    <section className="relative aspect-[16/7.2] min-h-[320px] overflow-hidden border-b bg-[#f7f3fb] md:min-h-[520px]">
       {heroSlides.map((item, index) => (
         <Image
-          key={item.eyebrow}
+          key={item.title}
           src={item.image}
           alt={`${item.title} Coraly Fit`}
           fill
           priority={index === 0}
           sizes="100vw"
-          className={`object-cover object-center transition-opacity duration-700 ${
+          className={`object-contain object-center transition-opacity duration-700 ${
             index === active ? "opacity-100" : "opacity-0"
           }`}
         />
       ))}
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0.74)_38%,rgba(255,255,255,0.08)_100%)]" />
-      <div className="container relative flex min-h-[520px] items-center pb-12 pt-16 md:min-h-[650px]">
-        <div className="max-w-xl">
-          <p className="text-sm font-extrabold uppercase tracking-[0.24em] text-primary">
-            {slide.eyebrow}
-          </p>
-          <h1 className="mt-4 text-5xl font-black uppercase italic tracking-[0.08em] text-slate-950 md:text-7xl">
-            {slide.title}
-          </h1>
-          <p className="mt-5 max-w-md text-lg leading-8 text-slate-700">
-            {slide.description}
-          </p>
-          <a
-            href="#catalogo"
-            className="mt-8 inline-flex h-12 min-w-56 items-center justify-center bg-[#B500B2] px-8 text-sm font-bold text-white transition-colors hover:bg-[#8100D1]"
-          >
-            Comprar agora
-          </a>
-        </div>
-        <CarouselDots
-          total={heroSlides.length}
-          active={active}
-          onSelect={setActive}
-          className="absolute bottom-5 left-1/2 -translate-x-1/2"
-        />
-      </div>
+      <CarouselDots
+        total={heroSlides.length}
+        active={active}
+        onSelect={setActive}
+        className="absolute bottom-5 left-1/2 -translate-x-1/2"
+      />
       <CarouselButton
         direction="prev"
         disabled={isFirst}
@@ -181,7 +151,7 @@ export function ProductCarousel({
   const ref = useRef<HTMLDivElement>(null);
   const displayProducts = useMemo(() => {
     const ordered = reverse ? [...products].reverse() : products;
-    return ordered.concat(ordered).slice(0, 8);
+    return ordered.slice(0, 8);
   }, [products, reverse]);
   const controls = useCarouselControls(ref, [displayProducts.length]);
 

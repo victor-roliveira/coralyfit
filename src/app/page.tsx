@@ -8,13 +8,16 @@ import {
 
 export default async function HomePage() {
   const products = await listCatalogProducts();
+  const launchProducts = products.filter((product) => product.isLaunch);
 
   return (
     <main className="bg-white">
       <HeroCarousel />
       <ShippingBar />
       <CategoryCarousel />
-      <ProductCarousel id="lancamentos" title="Lancamentos" products={products} />
+      {launchProducts.length ? (
+        <ProductCarousel id="lancamentos" title="Lancamentos" products={launchProducts} />
+      ) : null}
       <ProductCarousel id="mais-vendidos" title="Mais vendidos" products={products} reverse />
       <TestimonialsCarousel />
     </main>

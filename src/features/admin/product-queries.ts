@@ -1,4 +1,5 @@
 import { mockProducts } from "@/features/catalog/mock-products";
+import { calculateDiscountedPrice } from "@/features/catalog/pricing";
 import { requireAdmin } from "@/features/admin/auth";
 
 export type AdminCategoryOption = {
@@ -12,6 +13,9 @@ export type AdminProductListItem = {
   slug: string;
   category: string;
   priceCents: number;
+  originalPriceCents: number;
+  discountPercent: number;
+  isLaunch: boolean;
   images: string[];
   active: boolean;
   variantsCount: number;
@@ -25,6 +29,8 @@ type ProductRow = {
   name: string;
   slug: string;
   price_cents: number;
+  discount_percent: number;
+  is_launch: boolean;
   images: string[];
   active: boolean;
   created_at: string;
@@ -46,6 +52,9 @@ export async function listAdminProducts(): Promise<AdminProductListItem[]> {
       slug: product.slug,
       category: product.category,
       priceCents: product.priceCents,
+      originalPriceCents: product.originalPriceCents ?? product.priceCents,
+      discountPercent: product.discountPercent ?? 0,
+      isLaunch: product.isLaunch ?? false,
       images: product.images,
       active: true,
       variantsCount: product.variants.length,
@@ -58,7 +67,7 @@ export async function listAdminProducts(): Promise<AdminProductListItem[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,name,slug,price_cents,images,active,created_at,categories(name),product_variants(id,stock_quantity,reserved_quantity)"
+      "id,name,slug,price_cents,discount_percent,is_launch,images,active,created_at,categories(name),product_variants(id,stock_quantity,reserved_quantity)"
     )
     .order("created_at", { ascending: false });
 
@@ -74,7 +83,10 @@ export async function listAdminProducts(): Promise<AdminProductListItem[]> {
       name: product.name,
       slug: product.slug,
       category: product.categories?.name ?? "Sem categoria",
-      priceCents: product.price_cents,
+      priceCents: calculateDiscountedPrice(product.price_cents, product.discount_percent),
+      originalPriceCents: product.price_cents,
+      discountPercent: product.discount_percent,
+      isLaunch: product.is_launch,
       images: product.images,
       active: product.active,
       variantsCount: variants.length,

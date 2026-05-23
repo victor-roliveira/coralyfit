@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { createProduct } from "@/features/admin/product-actions";
 import type { AdminCategoryOption } from "@/features/admin/product-queries";
@@ -148,7 +149,7 @@ export function ProductForm({ categories }: ProductFormProps) {
             <Field label="Slug" name="slug" placeholder="conjunto-aura-move" />
           </section>
 
-          <section className="grid gap-4 md:grid-cols-[1fr_180px]">
+          <section className="grid gap-4 md:grid-cols-[1fr_180px_180px]">
             <div className="space-y-2">
               <Label htmlFor="categoryId">Categoria</Label>
               <select
@@ -166,6 +167,7 @@ export function ProductForm({ categories }: ProductFormProps) {
               </select>
             </div>
             <Field label="Preco" name="price" placeholder="229,90" required />
+            <Field label="Desconto (%)" name="discountPercent" placeholder="10" />
           </section>
 
           <section className="space-y-2">
@@ -342,20 +344,19 @@ export function ProductForm({ categories }: ProductFormProps) {
             </div>
           </section>
 
-          <section className="grid gap-4 md:grid-cols-[1fr_180px]">
+          <section className="grid gap-4 md:grid-cols-[1fr_180px_180px]">
             <Field
               label="ID do produto no AbacatePay"
               name="abacatepayProductId"
               placeholder="Opcional"
             />
-            <label className="flex items-end gap-2 pb-2 text-sm font-semibold text-slate-700">
-              <input
-                type="checkbox"
-                name="active"
-                defaultChecked
-                className="h-4 w-4 accent-[#B500B2]"
-              />
-              Produto ativo
+            <label className="flex items-end justify-between gap-3 rounded-md border px-3 py-2 text-sm font-semibold text-slate-700">
+              <span>Produto ativo</span>
+              <Switch name="active" defaultChecked />
+            </label>
+            <label className="flex items-end justify-between gap-3 rounded-md border px-3 py-2 text-sm font-semibold text-slate-700">
+              <span>Lançamento</span>
+              <Switch name="isLaunch" />
             </label>
           </section>
 

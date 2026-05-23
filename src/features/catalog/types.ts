@@ -13,6 +13,9 @@ export type CatalogProduct = {
   slug: string;
   description: string;
   priceCents: number;
+  originalPriceCents?: number;
+  discountPercent?: number;
+  isLaunch?: boolean;
   category: string;
   images: string[];
   variants: CatalogVariant[];

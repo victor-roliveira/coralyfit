@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import cartIcon from "@/assets/images/icone-cart.svg";
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
+import { getProductPricing } from "@/features/catalog/pricing";
 import { useCartStore } from "@/features/cart/cart-store";
 import type { CatalogProduct, CatalogVariant } from "@/features/catalog/types";
 import { FavoriteButton } from "@/features/favorites/favorite-button";
@@ -45,11 +46,16 @@ export function ProductCard({
   const colors = Array.from(
     new Map(product.variants.map((variant) => [variant.color, variant])).values()
   );
+  const pricing = getProductPricing(product);
 
   return (
     <article className="group min-w-0 bg-white">
       <div className="relative aspect-[0.74] overflow-hidden bg-slate-100">
-        <Link href={`/produtos/${product.slug}`} aria-label={`Ver ${product.name}`}>
+        <Link
+          href={`/produtos/${product.slug}`}
+          aria-label={`Ver ${product.name}`}
+          className="absolute inset-0 block"
+        >
           <Image
             src={product.images[0]}
             alt={product.name}
@@ -106,9 +112,21 @@ export function ProductCard({
               {product.name}
             </h2>
           </Link>
-          <p className="mt-1 text-2xl font-extrabold text-slate-950">
-            {formatCurrency(product.priceCents)}
-          </p>
+          <div className="mt-1 flex flex-wrap items-baseline gap-2">
+            <p className="text-2xl font-extrabold text-slate-950">
+              {formatCurrency(pricing.finalPriceCents)}
+            </p>
+            {pricing.hasDiscount ? (
+              <p className="text-sm italic text-slate-400 line-through">
+                {formatCurrency(pricing.originalPriceCents)}
+              </p>
+            ) : null}
+          </div>
+          {pricing.hasDiscount ? (
+            <p className="mt-1 text-xs font-black uppercase tracking-wide text-[#B500B2]">
+              {pricing.discountPercent}% off
+            </p>
+          ) : null}
           <p className="mt-1 text-sm text-slate-700">
             No PIX com 10% off ou 10x sem juros
           </p>
@@ -171,7 +189,7 @@ export function ProductCard({
               size: selectedVariant.size,
               color: selectedVariant.color,
               colorHex: selectedVariant.colorHex,
-              unitPriceCents: product.priceCents,
+              unitPriceCents: pricing.finalPriceCents,
               availableQuantity
             });
           }}

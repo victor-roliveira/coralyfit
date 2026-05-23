@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import cartIcon from "@/assets/images/icone-cart.svg";
+import { getProductPricing } from "@/features/catalog/pricing";
 import { useCartStore } from "@/features/cart/cart-store";
 import type { CatalogProduct, CatalogVariant } from "@/features/catalog/types";
 import { FavoriteButton } from "@/features/favorites/favorite-button";
@@ -33,6 +34,7 @@ export function ProductDetail({ product }: { product: CatalogProduct }) {
   const colors = Array.from(
     new Map(product.variants.map((variant) => [variant.color, variant])).values()
   );
+  const pricing = getProductPricing(product);
 
   return (
     <main className="container min-h-[calc(100vh-4rem)] py-8">
@@ -78,9 +80,21 @@ export function ProductDetail({ product }: { product: CatalogProduct }) {
             </div>
             <FavoriteButton productId={product.id} />
           </div>
-          <p className="text-3xl font-black text-slate-950">
-            {formatCurrency(product.priceCents)}
-          </p>
+          <div className="flex flex-wrap items-baseline gap-3">
+            <p className="text-3xl font-black text-slate-950">
+              {formatCurrency(pricing.finalPriceCents)}
+            </p>
+            {pricing.hasDiscount ? (
+              <p className="text-base italic text-slate-400 line-through">
+                {formatCurrency(pricing.originalPriceCents)}
+              </p>
+            ) : null}
+          </div>
+          {pricing.hasDiscount ? (
+            <p className="mt-1 text-sm font-black uppercase tracking-wide text-[#B500B2]">
+              {pricing.discountPercent}% off
+            </p>
+          ) : null}
           <p className="mt-2 text-sm text-slate-600">
             No PIX com 10% off ou 10x sem juros
           </p>
@@ -161,7 +175,7 @@ export function ProductDetail({ product }: { product: CatalogProduct }) {
                 size: selectedVariant.size,
                 color: selectedVariant.color,
                 colorHex: selectedVariant.colorHex,
-                unitPriceCents: product.priceCents,
+                unitPriceCents: pricing.finalPriceCents,
                 availableQuantity
               });
             }}

@@ -7,7 +7,10 @@ export const mockProducts: CatalogProduct[] = [
     slug: "legging-aura-high",
     description:
       "Legging cintura alta com toque macio, compressao equilibrada e bolso interno discreto.",
-    priceCents: 15990,
+    priceCents: 14391,
+    originalPriceCents: 15990,
+    discountPercent: 10,
+    isLaunch: true,
     category: "Leggings",
     images: [
       "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80"
@@ -25,6 +28,9 @@ export const mockProducts: CatalogProduct[] = [
     description:
       "Top com sustentacao media, alcas confortaveis e tecido respiravel para treinos intensos.",
     priceCents: 8990,
+    originalPriceCents: 8990,
+    discountPercent: 0,
+    isLaunch: true,
     category: "Tops",
     images: [
       "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80"
@@ -42,6 +48,9 @@ export const mockProducts: CatalogProduct[] = [
     description:
       "Conjunto leve com top e short de secagem rapida para musculacao, pilates e corrida.",
     priceCents: 22990,
+    originalPriceCents: 22990,
+    discountPercent: 0,
+    isLaunch: false,
     category: "Conjuntos",
     images: [
       "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80"
