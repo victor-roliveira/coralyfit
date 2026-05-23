@@ -2,21 +2,23 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Star } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import cartIcon from "@/assets/images/icone-cart.svg";
-import favoriteIcon from "@/assets/images/icone-favorito.svg";
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/features/cart/cart-store";
 import type { CatalogProduct, CatalogVariant } from "@/features/catalog/types";
+import { FavoriteButton } from "@/features/favorites/favorite-button";
 
 type ProductCardProps = {
   product: CatalogProduct;
+  initialFavorited?: boolean;
 };
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, initialFavorited = false }: ProductCardProps) {
   const availableVariants = product.variants.filter(
     (variant) => variant.stockQuantity - variant.reservedQuantity > 0
   );
@@ -41,20 +43,20 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <article className="group min-w-0 bg-white">
       <div className="relative aspect-[0.74] overflow-hidden bg-slate-100">
-        <Image
-          src={product.images[0]}
-          alt={product.name}
-          fill
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition-transform duration-500 hover:scale-[1.03]"
+        <Link href={`/produtos/${product.slug}`} aria-label={`Ver ${product.name}`}>
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-500 hover:scale-[1.03]"
+          />
+        </Link>
+        <FavoriteButton
+          productId={product.id}
+          initialFavorited={initialFavorited}
+          className="absolute right-3 top-3"
         />
-        <button
-          type="button"
-          aria-label="Favoritar produto"
-          className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-950 shadow-sm transition-colors hover:text-primary"
-        >
-          <Image src={favoriteIcon} alt="" className="h-6 w-6" />
-        </button>
         <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-white/92 px-2.5 py-1 text-xs font-bold text-slate-950">
           <Star className="h-3.5 w-3.5 fill-[#ffb020] text-[#ffb020]" />
           4.9
@@ -84,9 +86,11 @@ export function ProductCard({ product }: ProductCardProps) {
           <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
             {product.category}
           </p>
-          <h2 className="mt-1 line-clamp-2 min-h-[3.25rem] text-lg font-semibold leading-tight text-slate-950">
-            {product.name}
-          </h2>
+          <Link href={`/produtos/${product.slug}`} className="block">
+            <h2 className="mt-1 line-clamp-2 min-h-[3.25rem] text-lg font-semibold leading-tight text-slate-950 hover:text-primary">
+              {product.name}
+            </h2>
+          </Link>
           <p className="mt-1 text-2xl font-extrabold text-slate-950">
             {formatCurrency(product.priceCents)}
           </p>

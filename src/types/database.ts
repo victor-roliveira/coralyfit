@@ -14,6 +14,7 @@ export type Database = {
           id: string;
           full_name: string | null;
           avatar_url: string | null;
+          phone: string | null;
           role: "customer" | "admin";
           created_at: string;
           updated_at: string;
@@ -22,6 +23,7 @@ export type Database = {
           id: string;
           full_name?: string | null;
           avatar_url?: string | null;
+          phone?: string | null;
           role?: "customer" | "admin";
           created_at?: string;
           updated_at?: string;
@@ -144,6 +146,22 @@ export type Database = {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["stock_reservations"]["Insert"]>;
+        Relationships: [];
+      };
+      favorites: {
+        Row: {
+          id: string;
+          user_id: string;
+          product_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          product_id: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["favorites"]["Insert"]>;
         Relationships: [];
       };
       webhook_events: {

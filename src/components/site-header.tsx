@@ -116,7 +116,7 @@ export function SiteHeader() {
                   searchResults.map((product) => (
                     <Link
                       key={product.id}
-                      href="#catalogo"
+                      href={`/produtos/${product.slug}`}
                       className="flex items-center justify-between gap-3 px-3 py-2 text-sm hover:bg-slate-50"
                     >
                       <span className="font-semibold text-slate-950">{product.name}</span>
@@ -132,7 +132,7 @@ export function SiteHeader() {
             ) : null}
           </label>
           <Button asChild variant="ghost" size="icon" aria-label="Minha conta">
-            <Link href="/login">
+            <Link href="/conta/perfil">
               <Image src={userIcon} alt="" className="h-6 w-6" />
             </Link>
           </Button>

@@ -3,6 +3,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { verifyHmacSha256Base64 } from "@/lib/security/hmac";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
+export const runtime = "nodejs";
+
 type AbacatePayCheckoutWebhook = {
   id?: string;
   event: string;
@@ -22,6 +24,10 @@ export async function POST(request: NextRequest) {
     !process.env.ABACATEPAY_WEBHOOK_SECRET ||
     secret !== process.env.ABACATEPAY_WEBHOOK_SECRET
   ) {
+    console.error("AbacatePay webhook rejected: invalid webhookSecret", {
+      hasConfiguredSecret: Boolean(process.env.ABACATEPAY_WEBHOOK_SECRET),
+      hasReceivedSecret: Boolean(secret)
+    });
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
@@ -30,10 +36,15 @@ export async function POST(request: NextRequest) {
   const signature = request.headers.get("x-webhook-signature");
 
   if (!publicKey) {
+    console.error("AbacatePay webhook rejected: missing public key");
     return NextResponse.json({ message: "Webhook public key is not configured" }, { status: 503 });
   }
 
   if (!verifyHmacSha256Base64({ rawBody, signature, secret: publicKey })) {
+    console.error("AbacatePay webhook rejected: invalid signature", {
+      hasSignature: Boolean(signature),
+      rawBodyLength: rawBody.length
+    });
     return NextResponse.json({ message: "Invalid signature" }, { status: 401 });
   }
 
@@ -64,6 +75,12 @@ export async function POST(request: NextRequest) {
     }
 
     if (eventError && eventError.code !== "23505") {
+      console.error("AbacatePay webhook failed: unable to register event", {
+        eventId: payload.id,
+        event: payload.event,
+        code: eventError.code,
+        message: eventError.message
+      });
       return NextResponse.json({ message: "Unable to register webhook event" }, { status: 500 });
     }
   }
@@ -76,6 +93,12 @@ export async function POST(request: NextRequest) {
   const orderId = checkout?.externalId;
 
   if (!orderId || !checkout?.id || checkout.status !== "PAID") {
+    console.error("AbacatePay webhook rejected: invalid checkout payload", {
+      event: payload.event,
+      checkoutId: checkout?.id,
+      orderId,
+      status: checkout?.status
+    });
     return NextResponse.json({ message: "Invalid checkout payload" }, { status: 400 });
   }
 
@@ -86,6 +109,13 @@ export async function POST(request: NextRequest) {
   });
 
   if (error) {
+    console.error("AbacatePay webhook failed: unable to confirm order", {
+      eventId: payload.id,
+      checkoutId: checkout.id,
+      orderId,
+      code: error.code,
+      message: error.message
+    });
     return NextResponse.json({ message: "Unable to confirm order" }, { status: 500 });
   }
 
