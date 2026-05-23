@@ -27,6 +27,7 @@ export function ProductCard({
   const availableVariants = product.variants.filter(
     (variant) => variant.stockQuantity - variant.reservedQuantity > 0
   );
+  const isSoldOut = availableVariants.length === 0;
   const [selectedVariantId, setSelectedVariantId] = useState(
     availableVariants[0]?.id ?? product.variants[0]?.id
   );
@@ -54,7 +55,10 @@ export function ProductCard({
             alt={product.name}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover transition-transform duration-500 hover:scale-[1.03]"
+            className={cn(
+              "object-cover transition-all duration-500 hover:scale-[1.03]",
+              isSoldOut && "opacity-45 grayscale"
+            )}
           />
         </Link>
         <FavoriteButton
@@ -87,6 +91,11 @@ export function ProductCard({
           ))}
         </div>
       </div>
+      {isSoldOut ? (
+        <p className="mt-2 text-center text-xs font-black uppercase tracking-[0.22em] text-[#462C7D]">
+          Sold out
+        </p>
+      ) : null}
       <div className="space-y-3 pt-4">
         <div>
           <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
@@ -149,7 +158,7 @@ export function ProductCard({
         </div>
         <Button
           className="h-11 w-full rounded-full bg-[#B500B2] text-white hover:bg-[#8100D1]"
-          disabled={!selectedVariant || availableQuantity <= 0}
+          disabled={isSoldOut || !selectedVariant || availableQuantity <= 0}
           onClick={() => {
             if (!selectedVariant) return;
 

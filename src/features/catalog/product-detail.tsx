@@ -17,6 +17,7 @@ export function ProductDetail({ product }: { product: CatalogProduct }) {
   const availableVariants = product.variants.filter(
     (variant) => variant.stockQuantity - variant.reservedQuantity > 0
   );
+  const isSoldOut = availableVariants.length === 0;
   const [selectedVariantId, setSelectedVariantId] = useState(
     availableVariants[0]?.id ?? product.variants[0]?.id
   );
@@ -57,9 +58,14 @@ export function ProductDetail({ product }: { product: CatalogProduct }) {
               fill
               priority
               sizes="(min-width: 1024px) 52vw, 100vw"
-              className="object-cover"
+              className={cn("object-cover", isSoldOut && "opacity-45 grayscale")}
             />
           </div>
+          {isSoldOut ? (
+            <p className="text-center text-sm font-black uppercase tracking-[0.22em] text-[#462C7D]">
+              Sold out
+            </p>
+          ) : null}
         </section>
 
         <aside className="lg:pt-8">
@@ -143,7 +149,7 @@ export function ProductDetail({ product }: { product: CatalogProduct }) {
           <Button
             size="lg"
             className="mt-8 h-14 w-full rounded-full bg-[#B500B2] text-base font-black uppercase hover:bg-[#8100D1]"
-            disabled={!selectedVariant || availableQuantity <= 0}
+            disabled={isSoldOut || !selectedVariant || availableQuantity <= 0}
             onClick={() => {
               if (!selectedVariant) return;
               addItem({

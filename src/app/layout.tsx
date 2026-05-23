@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Jost } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 
 import { IdleSessionTimeout } from "@/components/idle-session-timeout";
 import { ScrollToTop } from "@/components/scroll-to-top";
@@ -8,9 +8,9 @@ import { SiteHeader } from "@/components/site-header";
 import { CartDrawer } from "@/features/cart/cart-drawer";
 import "@/app/globals.css";
 
-const jost = Jost({
+const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
-  variable: "--font-jost",
+  variable: "--bricolage-grotesque",
   display: "swap"
 });
 
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={jost.variable}>
+    <html lang="pt-BR" className={bricolageGrotesque.variable}>
       <body>
         <ScrollToTop />
         <IdleSessionTimeout />

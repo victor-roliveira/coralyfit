@@ -1,7 +1,5 @@
-import { redirect } from "next/navigation";
-
 import { hasSupabaseEnv } from "@/lib/env";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/features/admin/auth";
 
 type AdminProfile = {
   fullName: string | null;
@@ -85,24 +83,8 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
     return getMockDashboardData();
   }
 
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.role !== "admin") {
-    redirect("/");
-  }
+  const { supabase, profile } = await requireAdmin();
+  if (!supabase) return getMockDashboardData();
 
   const [
     ordersResult,

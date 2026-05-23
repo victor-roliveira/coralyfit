@@ -14,7 +14,7 @@
   --ring: 301 100% 35%;
   --destructive: 0 74% 48%;
   --destructive-foreground: 0 0% 100%;
-  --font-jost: "Jost";
+  --bricolage-grotesque: "Bricolage Grotesque";
 }
 
 * {
@@ -25,7 +25,7 @@ body {
   min-height: 100vh;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: var(--font-jost), Jost, Arial, sans-serif;
+  font-family: var(--bricolage-grotesque), "Bricolage Grotesque", Arial, sans-serif;
 }
 
 html {
