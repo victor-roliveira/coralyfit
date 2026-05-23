@@ -31,7 +31,7 @@ export async function signInWithPassword(
     return { message: "E-mail ou senha incorretos." };
   }
 
-  redirect(String(formData.get("next") ?? "/conta/pedidos"));
+  redirect(await getPostLoginPath(supabase, String(formData.get("next") ?? "")));
 }
 
 export async function signUpWithPassword(
@@ -73,12 +73,12 @@ export async function signInWithGoogle(formData: FormData) {
     redirect("/login?error=supabase");
   }
 
-  const next = String(formData.get("next") ?? "/conta/pedidos");
+  const next = normalizeInternalPath(String(formData.get("next") ?? ""));
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/auth/callback?next=${encodeURIComponent(next)}`
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/auth/callback${next ? `?next=${encodeURIComponent(next)}` : ""}`
     }
   });
 
@@ -112,4 +112,41 @@ export async function sendPasswordReset(
   }
 
   return { success: true, message: "Enviamos as instrucoes para seu e-mail." };
+}
+
+export async function signOut() {
+  if (hasSupabaseEnv()) {
+    const supabase = await createSupabaseServerClient();
+    await supabase.auth.signOut();
+  }
+
+  redirect("/login");
+}
+
+async function getPostLoginPath(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  requestedNext: string
+) {
+  const next = normalizeInternalPath(requestedNext);
+  if (next) return next;
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) return "/conta/pedidos";
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  return profile?.role === "admin" ? "/admin" : "/conta/pedidos";
+}
+
+function normalizeInternalPath(path: string) {
+  const value = path.trim();
+  if (!value || !value.startsWith("/") || value.startsWith("//")) return "";
+  return value;
 }

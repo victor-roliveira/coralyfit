@@ -9,7 +9,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   return (
     <main className="container grid min-h-[calc(100vh-4rem)] place-items-center py-10">
-      <AuthPanel next={params.next ?? "/conta/pedidos"} error={params.error} />
+      <AuthPanel next={params.next ?? ""} error={params.error} />
     </main>
   );
 }

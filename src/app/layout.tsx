@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Jost } from "next/font/google";
 
+import { IdleSessionTimeout } from "@/components/idle-session-timeout";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html lang="pt-BR" className={jost.variable}>
       <body>
         <ScrollToTop />
+        <IdleSessionTimeout />
         <SiteHeader />
         {children}
         <SiteFooter />
