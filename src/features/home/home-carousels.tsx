@@ -7,6 +7,9 @@ import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import heroImageOne from "@/assets/images/post-carrossel-1.png";
 import heroImageTwo from "@/assets/images/post-carrossel-2.png";
 import heroImageThree from "@/assets/images/post-carrossel-3.png";
+import heroMobileImageOne from "@/assets/images/post-carrossel-mobile-1.png";
+import heroMobileImageTwo from "@/assets/images/post-carrossel-mobile-2.png";
+import heroMobileImageThree from "@/assets/images/post-carrossel-mobile-3.png";
 import categoryConjunto from "@/assets/images/icone-categoria-conjunto.png";
 import categoryLegging from "@/assets/images/icone-categoria-leging.png";
 import categoryMacacao from "@/assets/images/icone-categoria-macacao.png";
@@ -18,15 +21,18 @@ import type { CatalogProduct } from "@/features/catalog/types";
 const heroSlides = [
   {
     title: "Coraly Fit lancamento",
-    image: heroImageOne
+    desktopImage: heroImageOne,
+    mobileImage: heroMobileImageOne
   },
   {
     title: "Coraly Fit treino",
-    image: heroImageTwo
+    desktopImage: heroImageTwo,
+    mobileImage: heroMobileImageTwo
   },
   {
     title: "Coraly Fit performance",
-    image: heroImageThree
+    desktopImage: heroImageThree,
+    mobileImage: heroMobileImageThree
   }
 ];
 
@@ -59,19 +65,30 @@ export function HeroCarousel() {
   const isLast = active === heroSlides.length - 1;
 
   return (
-    <section className="relative aspect-[16/7.2] min-h-[320px] overflow-hidden border-b bg-[#f7f3fb] md:min-h-[520px]">
+    <section className="relative aspect-[853/646] overflow-hidden border-b bg-[#f7f3fb] md:aspect-[16/7.2] md:min-h-[520px]">
       {heroSlides.map((item, index) => (
-        <Image
-          key={item.title}
-          src={item.image}
-          alt={`${item.title} Coraly Fit`}
-          fill
-          priority={index === 0}
-          sizes="100vw"
-          className={`object-contain object-center transition-opacity duration-700 ${
-            index === active ? "opacity-100" : "opacity-0"
-          }`}
-        />
+        <div key={item.title} className="absolute inset-0">
+          <Image
+            src={item.mobileImage}
+            alt={`${item.title} Coraly Fit`}
+            fill
+            priority={index === 0}
+            sizes="100vw"
+            className={`object-cover object-center transition-opacity duration-700 md:hidden ${
+              index === active ? "opacity-100" : "opacity-0"
+            }`}
+          />
+          <Image
+            src={item.desktopImage}
+            alt={`${item.title} Coraly Fit`}
+            fill
+            priority={index === 0}
+            sizes="100vw"
+            className={`hidden object-contain object-center transition-opacity duration-700 md:block ${
+              index === active ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        </div>
       ))}
       <CarouselDots
         total={heroSlides.length}
@@ -104,7 +121,7 @@ export function CategoryCarousel() {
         </h2>
       </div>
       <div
-        className="mx-auto grid max-w-6xl grid-cols-2 justify-items-center gap-x-6 gap-y-8 px-4 sm:grid-cols-3 lg:grid-cols-5"
+        className="no-scrollbar grid auto-cols-[38vw] grid-flow-col justify-start gap-5 overflow-x-auto px-4 scroll-smooth sm:auto-cols-[24vw] lg:mx-auto lg:max-w-6xl lg:auto-cols-auto lg:grid-flow-row lg:grid-cols-5 lg:justify-items-center lg:overflow-visible"
       >
         {categories.map((category) => (
           <a
